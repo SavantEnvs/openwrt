@@ -1,0 +1,157 @@
+# Fixed Kconfig the `conf` fuzz target reads fuzzed .config files against. It mirrors the
+# constructs OpenWrt's own Config.in tree uses: bool/tristate/int/hex/string, choices,
+# select, depends, ranges, defaults, menus and `modules`.
+mainmenu "OpenWrt Configuration"
+
+config MODULES
+	modules
+	bool
+	default y
+
+config HAVE_DOT_CONFIG
+	bool
+	default y
+
+menu "Target Selection"
+
+choice
+	prompt "Target System"
+	default TARGET_ath79
+
+config TARGET_ath79
+	bool "Atheros ATH79"
+
+config TARGET_ramips
+	bool "MediaTek Ralink MIPS"
+
+config TARGET_x86
+	bool "x86"
+
+endchoice
+
+config TARGET_BOARD
+	string
+	default "ath79" if TARGET_ath79
+	default "ramips" if TARGET_ramips
+	default "x86" if TARGET_x86
+
+config TARGET_ROOTFS_PARTSIZE
+	int "Root filesystem partition size (in MiB)"
+	range 8 4096
+	default 104
+
+config TARGET_KERNEL_PARTSIZE
+	int "Kernel partition size (in MiB)"
+	range 1 256
+	default 16
+
+config TARGET_LOADADDR
+	hex "Kernel load address"
+	range 0x80000000 0x8fffffff
+	default 0x80060000
+
+config TARGET_VERSION_REPO
+	string "Version repository URL"
+	default "https://downloads.openwrt.org/releases"
+
+endmenu
+
+menu "Global build settings"
+
+config DEVEL
+	bool "Advanced configuration options (for developers)"
+	default n
+
+config BUILD_LOG
+	bool "Enable log files during build process"
+	depends on DEVEL
+
+config CCACHE
+	bool "Use ccache"
+	depends on DEVEL
+	default y
+
+config SIGNED_PACKAGES
+	bool "Cryptographically sign package lists"
+	default y
+
+config KERNEL_DEBUG_INFO
+	bool "Compile the kernel with debug information"
+	select KERNEL_KALLSYMS
+	default n
+
+config KERNEL_KALLSYMS
+	bool "Compile the kernel with symbol table information"
+
+config KERNEL_SWAP
+	tristate "Support for paging of anonymous memory (swap)"
+	default m if DEVEL
+	default y
+
+config KERNEL_LOG_BUF_SHIFT
+	int "Kernel log buffer size shift"
+	range 12 25
+	default 16 if !DEVEL
+	default 19
+
+config EXTRA_OPTIMIZATION
+	string "Additional compiler options"
+	depends on DEVEL
+	default "-fno-caller-saves -fno-plt"
+
+config IB
+	bool "Build the OpenWrt Image Builder"
+	select SDK_NEEDED
+
+config SDK_NEEDED
+	bool
+
+endmenu
+
+menu "Base system"
+
+config PACKAGE_busybox
+	tristate "busybox"
+	default y
+	help
+	  The Swiss Army Knife of embedded Linux.
+
+config BUSYBOX_CONFIG_FEATURE_EDITING
+	bool "Command line editing"
+	depends on PACKAGE_busybox
+	default y
+
+config BUSYBOX_CONFIG_FEATURE_EDITING_HISTORY
+	int "History size"
+	depends on BUSYBOX_CONFIG_FEATURE_EDITING
+	range 0 1000
+	default 256
+
+config PACKAGE_dropbear
+	tristate "dropbear"
+	depends on !PACKAGE_openssh-server
+	default y
+
+config PACKAGE_openssh-server
+	tristate "openssh-server"
+	select PACKAGE_libc if !PACKAGE_dropbear
+
+config PACKAGE_libc
+	tristate "libc"
+	default y
+
+comment "Network"
+
+config PACKAGE_hostapd
+	tristate "hostapd"
+	select PACKAGE_libubus
+	imply PACKAGE_wpad-basic
+
+config PACKAGE_libubus
+	tristate "libubus"
+
+config PACKAGE_wpad-basic
+	tristate "wpad-basic"
+	depends on !PACKAGE_hostapd || DEVEL
+
+endmenu

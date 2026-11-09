@@ -1,0 +1,3 @@
+cferam.000
+vmlinux.lz
+bcm94908.dtb
