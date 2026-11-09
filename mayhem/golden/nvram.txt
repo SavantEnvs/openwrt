@@ -1,0 +1,20 @@
+[parsed] vars=8 len=116 crc=0x1e crc_ok=1
+et0macaddr=00:11:22:33:44:55
+lan_ipaddr=192.168.1.1
+lan_netmask=255.255.255.0
+sdram_config=0x0009
+sdram_init=0x0003
+sdram_ncdl=0x00000000
+sdram_refresh=0x0000
+wan_proto=dhcp
+get lan_ipaddr=192.168.1.1
+get missing=
+[committed] vars=8 len=196 crc=0xb7 crc_ok=1
+et0macaddr=00:11:22:33:44:55
+lan_ipaddr=10.0.0.1
+lan_netmask=255.255.255.0
+new_var=new_value
+sdram_config=0x0009
+sdram_init=0x0003
+sdram_ncdl=0x00000000
+sdram_refresh=0x0000
