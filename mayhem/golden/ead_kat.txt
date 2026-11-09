@@ -1,0 +1,7 @@
+1a2b: openwrt-ap
+pong handled=1 auth_type=1 sid=0042
+prime handled=1 tc=1 salt_len=16 modulus_len=256
+salt=a0a1a2a3a4a5a6a7a8a9aaabacadaeaf
+pw_salt=abcdefghijklmnopqrstuvwxyzabcde
+b handled=1 B_len=20
+B=101316191c1f2225282b2e3134373a3d40434649
