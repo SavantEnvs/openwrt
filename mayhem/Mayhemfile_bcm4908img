@@ -1,0 +1,8 @@
+project: savantenvs/openwrt
+target: bcm4908img
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/bcm4908img/testsuite
+cmds:
+  - cmd: /mayhem/bcm4908img bootfs -i @@ ls
+    timeout: 30

@@ -1,0 +1,9 @@
+project: savantenvs/openwrt
+target: kconfig_conf
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/kconfig_conf/testsuite
+cmds:
+  # mayhem-lint: ok-image-path (the fixed Kconfig is only read)
+  - cmd: /mayhem/kconfig_conf -s -r @@ --olddefconfig /mayhem/mayhem/kconfig_conf/Kconfig
+    timeout: 30
